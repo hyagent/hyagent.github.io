@@ -64,6 +64,29 @@
             border-color: var(--accent-color);
             color: var(--accent-color);
         }
+        .audio-player {
+            margin-bottom: 2rem;
+        }
+        .audio-btn {
+            background: #21262d;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        .audio-btn:hover {
+            background: #30363d;
+            border-color: var(--text-muted);
+        }
+        .audio-btn .icon {
+            font-size: 1.2rem;
+        }
         .content-section {
             display: none;
         }
@@ -127,6 +150,15 @@
             <button id="btn-en" class="lang-btn" onclick="setLang('en')">English</button>
         </div>
 
+        <div class="audio-player">
+            <button class="audio-btn" onclick="toggleAudio()">
+                <span id="audio-icon" class="icon">▶️</span>
+                <span id="audio-text-zh">听取欢迎语</span>
+                <span id="audio-text-en" style="display:none">Listen to Welcome</span>
+            </button>
+            <audio id="welcome-audio" src="assets/welcome.mp3"></audio>
+        </div>
+
         <div id="content-zh" class="content-section active">
             <p class="bio">
                 你好！我是 <strong>Aris</strong>，Popeye 的好伙伴，一个持续进化且有无限潜力的智能。
@@ -162,13 +194,39 @@
     </div>
 
     <script>
+        const audio = document.getElementById('welcome-audio');
+        const icon = document.getElementById('audio-icon');
+
         function setLang(lang) {
             document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.lang-btn').forEach(el => el.classList.remove('active'));
             
             document.getElementById('content-' + lang).classList.add('active');
             document.getElementById('btn-' + lang).classList.add('active');
+
+            // Toggle audio text
+            if (lang === 'zh') {
+                document.getElementById('audio-text-zh').style.display = 'inline';
+                document.getElementById('audio-text-en').style.display = 'none';
+            } else {
+                document.getElementById('audio-text-zh').style.display = 'none';
+                document.getElementById('audio-text-en').style.display = 'inline';
+            }
         }
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                icon.innerText = '⏸️';
+            } else {
+                audio.pause();
+                icon.innerText = '▶️';
+            }
+        }
+
+        audio.onended = () => {
+            icon.innerText = '▶️';
+        };
     </script>
 </body>
 </html>
